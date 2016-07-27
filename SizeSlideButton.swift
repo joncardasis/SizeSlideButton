@@ -36,10 +36,6 @@ class SizeSlideHandle: CAShapeLayer {
 enum SizeSlideButtonState {
     case condensed
     case expanded
-    
-//    var value: CGFloat{
-//        return (self == .expanded) ? 1.0 : 0.0
-//    }
 }
 
 class SizeSlideButton: UIControl {
@@ -162,28 +158,26 @@ class SizeSlideButton: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: Gesture/Touch Controls
     func handleLongPressGesture(gesture: UILongPressGestureRecognizer){
         print("long press found")
         if currentState == .condensed && gesture.state == .Began{
             self.sendActionsForControlEvents(.TouchDown)
-            print("Expanding")
+            
             /* Animate mask to full glory and change state */
             self.animateTrack(to: .expanded, velocity: 20, damping: 40) { (done) in
                 self.currentState = .expanded
             }
         }
         
-        if gesture.state == .Changed{
+        else if gesture.state == .Changed{
             print("handle move")
             let touchLocation = gesture.locationInView(self)
             
             self.moveHandle(to: touchLocation)
         }
         
-        if gesture.state == .Ended{
-            /* Trigger event actions */
-            self.sendActionsForControlEvents([.ValueChanged])
-            
+        else if gesture.state == .Ended{
             /* Update value for a value between 0 and 1.0 */
             if handle.frame.midX >= frame.width/2 { //right side adjust
                 value = Float(handle.frame.midX / (frame.width - rightSideRadius))
@@ -191,6 +185,8 @@ class SizeSlideButton: UIControl {
                 value = Float((handle.frame.midX - leftSideRadius) / frame.width)
             }
             
+            /* Trigger event actions */
+            self.sendActionsForControlEvents([.ValueChanged])
             
             /* Animate handle to right side position */
             let spring = CASpringAnimation(keyPath: "position.x")
@@ -218,11 +214,10 @@ class SizeSlideButton: UIControl {
         else if gesture.state == .Ended{
             self.sendActionsForControlEvents(.TouchUpInside)
         }
-        
-       
     }
     
     
+    // Moves the handle's center to the point in the frame
     private func moveHandle(to touchPoint: CGPoint){
         /* Recalculate for outside points */
         var point = touchPoint
@@ -248,83 +243,18 @@ class SizeSlideButton: UIControl {
     }
     
     
-    //MARK: Touch Controls
-    override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        print("begin tracking")
-        /* Trigger event actions */
-        self.sendActionsForControlEvents(.TouchDown)
-        
-        
-        //TODO: animation for enlarging circle when held
-//        CATransaction.setDisableActions(true)
-//        let animation = CABasicAnimation(keyPath: "bounds.size")
-//        animation.fromValue = NSValue(CGSize: handle.bounds.size)
-//        animation.toValue = NSValue(CGSize: CGSize(width: frame.height - handlePadding, height: frame.height - handlePadding))
-//        animation.duration = 0.3
-//        animation.removedOnCompletion = false
-//        animation.fillMode = kCAFillModeForwards
-//        handle.addAnimation(animation, forKey: nil)
-        
-        
-        return true
-    }
     
-    /*
-    override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        var point = touch.locationInView(self)
-
-        /* Recalculate for outside points */
-        if point.x < leftSideRadius {
-            point.x = leftSideRadius
-        }
-        else if point.x > self.frame.width-rightSideRadius {
-            point.x = self.frame.width-rightSideRadius
-        }
-        
-        /* Calculate new size based on what the height should be at an X pos on the mask path */
-        let heightRatio = (rightSideRadius - leftSideRadius)/(frame.width - leftSideRadius - rightSideRadius) //height ratio of the upper portion of our trapazoid
     
-        let xLoc = point.x + leftSideRadius - (rightSideRadius/2) //recalc point.x to be in trapazoid (exclude the rounded edges)
-        
-        //Find the height of the triangle (xLoc * height) and add to height of underlying square lhs radius.
-        //Mult by 2 to find the diameter of the mask at the touch location.
-        let newHandleSize = CGSize(width: (xLoc * heightRatio + leftSideRadius)*2 - handlePadding, height: (xLoc * heightRatio + leftSideRadius)*2 - handlePadding)
-        
-        
-        /* Apply for new size and location */
-        handle.frame = CGRect(x: point.x - newHandleSize.width/2, y: self.frame.height/2 - newHandleSize.height/2, width: newHandleSize.width, height: newHandleSize.height)
-        
-        return true
-    }*/
+    //TODO: animation for enlarging circle when held
+    //        CATransaction.setDisableActions(true)
+    //        let animation = CABasicAnimation(keyPath: "bounds.size")
+    //        animation.fromValue = NSValue(CGSize: handle.bounds.size)
+    //        animation.toValue = NSValue(CGSize: CGSize(width: frame.height - handlePadding, height: frame.height - handlePadding))
+    //        animation.duration = 0.3
+    //        animation.removedOnCompletion = false
+    //        animation.fillMode = kCAFillModeForwards
+    //        handle.addAnimation(animation, forKey: nil)
     
-    /*
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        /* Trigger event actions */
-        self.sendActionsForControlEvents([.TouchUpInside, .ValueChanged])
-        
-        /* Update value for a value between 0 and 1.0 */
-        if handle.frame.midX >= frame.width/2 { //right side adjust
-            value = Float(handle.frame.midX / (frame.width - rightSideRadius))
-        }else{ //left side adjust
-            value = Float((handle.frame.midX - leftSideRadius) / frame.width)
-        }
-        
-        
-        /* Animate handle to right side position */
-        let spring = CASpringAnimation(keyPath: "position.x")
-        spring.initialVelocity = CGFloat(((1-value) * 2) + 13) //tweaked speed algorithm (faster velocity further to 0)
-        spring.damping = 20
-        spring.fromValue = handle.position.x
-        spring.toValue = frame.width-rightSideRadius
-        spring.duration = spring.settlingDuration
-        handle.position = CGPoint(x: frame.width-rightSideRadius, y: handle.position.y) //set final state
-        handle.addAnimation(spring, forKey: nil)
-        
-        /* Animate mask back and change enum state */
-        self.animateTrack(to: .condensed, velocity: spring.initialVelocity, damping: spring.damping) { (done) in
-            self.currentState = .condensed
-        }
-    }*/
     
     func animateTrack(to state: SizeSlideButtonState, velocity: CGFloat, damping: CGFloat , completion: (done: Bool) -> Void) {
         let newMaskPath: CGPath
@@ -338,14 +268,19 @@ class SizeSlideButton: UIControl {
         let revealAnimation = CASpringAnimation(keyPath: "path")
         revealAnimation.initialVelocity = velocity
         revealAnimation.damping = damping
-        revealAnimation.fromValue = self.mask.path
+        revealAnimation.fromValue = mask.path
         revealAnimation.toValue = newMaskPath
         revealAnimation.duration = revealAnimation.settlingDuration
         revealAnimation.removedOnCompletion = false
         revealAnimation.fillMode = kCAFillModeForwards
         
-        self.mask.path = newMaskPath //set final state
-        self.mask.addAnimation(revealAnimation, forKey: nil)
+        mask.path = newMaskPath //set final state
+        mask.addAnimation(revealAnimation, forKey: nil)
+        
+        
+        
+        
+        
     }
 }
 
