@@ -14,6 +14,7 @@
 		35B116EE1D25C44000B0C925 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B116EC1D25C44000B0C925 /* LaunchScreen.storyboard */; };
 		35B116F91D25C44000B0C925 /* ColorSizeSliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B116F81D25C44000B0C925 /* ColorSizeSliderTests.swift */; };
 		35B117041D25C44000B0C925 /* ColorSizeSliderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B117031D25C44000B0C925 /* ColorSizeSliderUITests.swift */; };
+		35B117121D25C46600B0C925 /* SizeSlideButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B117111D25C46600B0C925 /* SizeSlideButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		35B116FF1D25C44000B0C925 /* ColorSizeSliderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ColorSizeSliderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B117031D25C44000B0C925 /* ColorSizeSliderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSizeSliderUITests.swift; sourceTree = "<group>"; };
 		35B117051D25C44000B0C925 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35B117111D25C46600B0C925 /* SizeSlideButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SizeSlideButton.swift; path = ../SizeSlideButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 			children = (
 				35B116E31D25C44000B0C925 /* AppDelegate.swift */,
 				35B116E51D25C44000B0C925 /* ViewController.swift */,
+				35B117111D25C46600B0C925 /* SizeSlideButton.swift */,
 				35B116E71D25C44000B0C925 /* Main.storyboard */,
 				35B116EA1D25C44000B0C925 /* Assets.xcassets */,
 				35B116EC1D25C44000B0C925 /* LaunchScreen.storyboard */,
@@ -257,6 +260,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35B116E61D25C44000B0C925 /* ViewController.swift in Sources */,
+				35B117121D25C46600B0C925 /* SizeSlideButton.swift in Sources */,
 				35B116E41D25C44000B0C925 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
