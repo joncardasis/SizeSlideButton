@@ -11,10 +11,9 @@ import UIKit
 //MARK: - SizeSlideButton Subcomponents
 class SizeSlideHandle: CAShapeLayer {
     var color: UIColor = UIColor(red: 0, green: 122/255, blue: 255/255, alpha: 1){
-        didSet{
-            self.fillColor = color.CGColor
-        }
+        didSet{ self.fillColor = color.CGColor }
     }
+    
     override var frame: CGRect{
         didSet{
             self.path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)).CGPath
@@ -38,6 +37,11 @@ enum SizeSlideButtonState {
     case expanded
 }
 
+extension UIControlEvents{ //Add extra control event
+    /* Note that Apple only reserves 4 values: 0x01000000, 0x02000000, 0x04000000 and 0x08000000 for use by UIControlEventApplicationReserved */
+    static let TouchDragFinished = UIControlEvents(rawValue: 0x01000000) //uppercase to match UIControlEvents (sorry Swift3)
+}
+
 class SizeSlideButton: UIControl {
     override var frame: CGRect {
         didSet{
@@ -46,22 +50,18 @@ class SizeSlideButton: UIControl {
             }else{
                 mask.path = expandedLayerMaskPath
             }
-            if let handle = handle { //protect variable
-                handle.frame.size = CGSize(width: frame.height, height: frame.height)
-                handle.position = CGPoint(x: frame.width-rightSideRadius, y: frame.height/2)
-            }
+            handle.frame.size = CGSize(width: frame.height, height: frame.height)
+            handle.position = CGPoint(x: frame.width-rightSideRadius, y: frame.height/2)
         }
     }
     let mask = CAShapeLayer()
-    var handle: SizeSlideHandle!
+    var handle = SizeSlideHandle()
     
     var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
         didSet{
-            if let handle = handle{
-                //Adjust size position for delta value
-                handle.frame.size = CGSize(width: handle.frame.width + (oldValue-handlePadding), height: handle.frame.height + (oldValue-handlePadding))
-                handle.position = CGPoint(x: handle.position.x + (handlePadding-oldValue)/2, y: frame.height/2)
-            }
+            //Adjust size position for delta value
+            handle.frame.size = CGSize(width: handle.frame.width + (oldValue-handlePadding), height: handle.frame.height + (oldValue-handlePadding))
+            handle.position = CGPoint(x: handle.position.x + (handlePadding-oldValue)/2, y: frame.height/2)
         }
     }
     var value: Float = 1.0 //value which displays between 0 and 1.0 for position on control
@@ -130,13 +130,12 @@ class SizeSlideButton: UIControl {
         mask.path = condensedLayerMaskPath
         mask.rasterizationScale = UIScreen.mainScreen().scale
         mask.shouldRasterize = true
-        self.layer.mask = mask //MARK: DEBUG - turned off
+        self.layer.mask = mask
         
         /* Set a default handle padding */
         handlePadding = leftSideRadius
         
         /* Setup Handle */
-        handle = SizeSlideHandle()
         handle.frame = CGRect(x: 0, y: 0, width: frame.height - handlePadding, height: frame.height - handlePadding)
         handle.position = CGPoint(x: frame.width-rightSideRadius, y: frame.height/2)
         handle.actions = ["position" : NSNull(), "bounds" : NSNull(), "path" : NSNull()] //disable implicit animations
@@ -154,7 +153,8 @@ class SizeSlideButton: UIControl {
     
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)!
+        commonInit()
     }
     
     //MARK: Gesture/Touch Controls
@@ -164,16 +164,14 @@ class SizeSlideButton: UIControl {
             self.sendActionsForControlEvents(.TouchDown)
             
             /* Animate mask to full glory and change state when completed */
-            self.currentState = .expanded //promise the state will be expanded
+            currentState = .expanded //promise the state will be expanded
             self.animateTrack(to: .expanded, velocity: 20, damping: 40)
         }
         
         if gesture.state == .Changed{
             let touchLocation = gesture.locationInView(self)
             self.moveHandle(to: touchLocation)
-        }
-        
-        if gesture.state == .Ended{
+            
             /* Update value for a value between 0 and 1.0 */
             if handle.frame.midX >= frame.width/2 { //right side adjust
                 value = Float(handle.frame.midX / (frame.width - rightSideRadius))
@@ -182,8 +180,10 @@ class SizeSlideButton: UIControl {
             }
             
             /* Trigger event actions */
-            self.sendActionsForControlEvents([.ValueChanged])
-            
+            self.sendActionsForControlEvents(.ValueChanged)
+        }
+        
+        if gesture.state == .Ended{
             /* Animate handle to right side position */
             let spring = CASpringAnimation(keyPath: "position.x")
             spring.initialVelocity = CGFloat(((1-value) * 2) + 13) //tweaked speed algorithm (faster velocity further to 0)
@@ -195,8 +195,11 @@ class SizeSlideButton: UIControl {
             handle.addAnimation(spring, forKey: nil)
 
             /* Animate mask back and change enum state */
-            self.currentState = .condensed //promise the state will become condensed
+            currentState = .condensed //promise the state will become condensed
             self.animateTrack(to: .condensed, velocity: spring.initialVelocity, damping: spring.damping)
+            
+            /* Trigger event actions */
+            self.sendActionsForControlEvents(.TouchDragFinished)
         }
     }
     
@@ -213,7 +216,6 @@ class SizeSlideButton: UIControl {
     override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
         //Set so only hit-box area is the condensed frame
         let condensedHitBox = CGRect(origin: CGPoint(x: condensedFrame.origin.x - frame.origin.x, y:0), size: condensedFrame.size) //recalculate proper hitbox for condensedframe
-        //print("Valid Touch: \(CGRectContainsPoint(condensedHitBox, point))") //TODO: remove line
         return CGRectContainsPoint(condensedHitBox, point)
     }
     

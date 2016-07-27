@@ -24,38 +24,31 @@ class ViewController: UIViewController {
         /* Additional Setup */
         fancyControl.trackColor = UIColor.whiteColor()
         fancyControl.handle.color = UIColor(red: 255/255.0, green: 111/255.0, blue: 0, alpha: 1)
-        //fancyControl.handlePadding = 0.0 //Add no extra padding around the handle
-            //handlePadding works best as <= leftSideRadius
+        fancyControl.handlePadding = 0.0 //Add no extra padding around the handle
         
         
-        fancyControl.addTarget(self, action: #selector(sizeSelected), forControlEvents: .ValueChanged)
+        fancyControl.addTarget(self, action: #selector(newSizeSelected), forControlEvents: .TouchDragFinished)
         fancyControl.addTarget(self, action: #selector(sizeSliderTapped), forControlEvents: .TouchUpInside)
         self.view.addSubview(fancyControl)
         
-        
-        
-        
-        
+        /* Test for moving frame and changing padding */
         //fancyControl.frame = CGRect(x: 50, y: 130, width: 200, height: 50)
         //fancyControl.handlePadding = 0.0
         
         
         //A button to test for click-through on the fancyControl
         let debugBtn = UIButton(frame: CGRect(x: 30, y: 30, width: 100, height: 32))
-        debugBtn.backgroundColor = UIColor.redColor();
-        debugBtn.titleLabel?.text = "HELLO";
+        debugBtn.backgroundColor = UIColor.purpleColor();
         debugBtn.addTarget(self, action: #selector(test), forControlEvents: .TouchUpInside)
-        
         self.view.insertSubview(debugBtn, belowSubview: fancyControl)
     }
     
-    func sizeSelected(sender: SizeSlideButton){
-        print("The new size is: \(sender.currentSize)")
+    func newSizeSelected(sender: SizeSlideButton){
+        //Do something once a size is selected and the control let go
         print("Value: \(sender.value)")
     }
     
     func sizeSliderTapped(sender: SizeSlideButton){
-        print("reach")
         //Do something when the button is tapped
     }
     
@@ -69,15 +62,16 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
 }
 /*
  
  Document:
  
  .TouchUpInside is called when a TAP has finished
- .ValueChanged is called when the slider was let go
+ .ValueChanged is called when the slider is moved
  .TouchDown is called both when a long press is detected or a regular touch is detected
+ A custom UIControlEvent called `TouchDragFinished` is implemented for when the slider has selected a new value and been released
+ 
  
  
  + Use `currentSize` to obtain the size the person has selected
