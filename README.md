@@ -14,6 +14,8 @@ A fun Swift UIControl for picking a size.
 + `value` is a value between 0 and 1.0 of where the handle was positioned relative on the track
 + `leftSideRadius` and `rightSideRadius` return the radii of the left and right sides of the frame when expanded
 + `currentState` returns if the control is condensed or expanded
++ `init(condensedFrame: CGRect)` will set the frame of where the condensed frame should lie (width and height should be equal)
++ `init(frame: CGRect)` will set the frame of where the frame should lie when fully expanded
 
 ## Supported UIControlEvents
 + `TouchUpInside` is called when a tap on the control is released
