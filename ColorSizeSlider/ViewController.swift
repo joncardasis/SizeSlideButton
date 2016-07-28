@@ -10,12 +10,14 @@ import UIKit
 
 /* A test viewcontroller */
 class ViewController: UIViewController {
-
+    
+    var debugBtn: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         
-        let condensedFrame = CGRect(x: 280, y: 30, width: 32, height: 32) //Width and Height should be equal
+        let condensedFrame = CGRect(x: 280, y: 70, width: 32, height: 32) //Width and Height should be equal
         let fancyControl = SizeSlideButton(condensedFrame: condensedFrame)
         
         //let fancyControl = SizeSlideButton(frame: CGRect(x: 10, y: 30, width: 352, height: 32))
@@ -24,7 +26,7 @@ class ViewController: UIViewController {
         /* Additional Setup */
         fancyControl.trackColor = UIColor.whiteColor()
         fancyControl.handle.color = UIColor(red: 255/255.0, green: 111/255.0, blue: 0, alpha: 1)
-        fancyControl.handlePadding = 0.0 //Add no extra padding around the handle
+        //fancyControl.handlePadding = 0.0 //Add no extra padding around the handle
         
         
         fancyControl.addTarget(self, action: #selector(newSizeSelected), forControlEvents: .TouchDragFinished)
@@ -37,8 +39,10 @@ class ViewController: UIViewController {
         
         
         //A button to test for click-through on the fancyControl
-        let debugBtn = UIButton(frame: CGRect(x: 30, y: 30, width: 100, height: 32))
-        debugBtn.backgroundColor = UIColor.purpleColor();
+        debugBtn = UIButton(frame: CGRect(x: 165, y: 75, width: 100, height: 22))
+        //debugBtn.backgroundColor = UIColor.purpleColor();
+        debugBtn.setTitle("Tapped", forState: .Normal)
+        debugBtn.alpha = 0
         debugBtn.addTarget(self, action: #selector(test), forControlEvents: .TouchUpInside)
         self.view.insertSubview(debugBtn, belowSubview: fancyControl)
     }
@@ -50,6 +54,15 @@ class ViewController: UIViewController {
     
     func sizeSliderTapped(sender: SizeSlideButton){
         //Do something when the button is tapped
+        
+        UIView.animateWithDuration(0.3, animations: { 
+            self.debugBtn.alpha = 1
+            }) { (done) in
+                UIView.animateWithDuration(0.3, delay: 0.65, options: .CurveEaseIn, animations: {
+                    self.debugBtn.alpha = 0
+                    }, completion: nil)
+        }
+        
     }
     
     

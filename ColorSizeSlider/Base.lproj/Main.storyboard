@@ -16,7 +16,7 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.30196079611778259" green="0.81568628549575806" blue="0.88235294818878174" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.37647059559822083" green="0.49019607901573181" blue="0.54509806632995605" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
