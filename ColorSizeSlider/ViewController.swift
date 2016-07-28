@@ -2,8 +2,8 @@
 //  ViewController.swift
 //  ColorSizeSlider
 //
-//  Created by Cardasis, Jonathan (J.) on 6/30/16.
-//  Copyright © 2016 Cardasis, Jonathan (J.). All rights reserved.
+//  Created by Jonathan Cardasis on 6/30/16.
+//  Copyright © 2016 Jonathan Cardasis. All rights reserved.
 //
 
 import UIKit
