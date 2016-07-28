@@ -47,3 +47,6 @@ func sizeSliderTapped(sender: SizeSlideButton){
 Output:
 
 <img src="../assets/darkScreenshot.png?raw=true" width="350">
+
+## License
+SizeSlideButton is available under the MIT license. See the LICENSE file for more info.
