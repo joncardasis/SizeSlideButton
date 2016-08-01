@@ -6,7 +6,7 @@
 A fun Swift UIControl for picking a size.
 ![Demo Animation](../assets/demo.gif?raw=true)
 
-## Features and Customization
+## Documentation
 + `init(condensedFrame: CGRect)` will set the frame of where the condensed frame should lie (width and height should be equal)
 + `init(frame: CGRect)` will set the frame of where the frame should lie when fully expanded
 + `currentSize` to obtain the size the person has selected
@@ -24,6 +24,11 @@ A fun Swift UIControl for picking a size.
 + `TouchDown` is called both when a long press is detected or a regular touch is detected
 + `TouchDragFinished` (A custom UIControlEvent) is called when the slider has selected a new value and been released
  
+## Installation
+### Cocoapods
+Add `pod 'SizeSlideButton'` to your Podfile.
+### Manually
+Add the `SizeSlideButton.swift` class to your project.
 
 ## Examples
 ```Swift
