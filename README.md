@@ -1,7 +1,7 @@
 # SizeSlideButton
 ![Supported Version](https://img.shields.io/badge/Swift-2.2-yellow.svg)
-![Platform](https://img.shields.io/badge/platform-iOS-lightgrey.svg)
-![License](https://img.shields.io/badge/license-MIT-lightgray.svg)
+![Platform](https://img.shields.io/badge/platform-iOS-lightgray.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![CocoaPods](https://img.shields.io/badge/CocoaPods-1.0-green.svg)
 
 A fun Swift UIControl for picking a size.
