@@ -22,7 +22,6 @@ class ViewController: UIViewController {
         
         //let fancyControl = SizeSlideButton(frame: CGRect(x: 10, y: 30, width: 352, height: 32))
         
-        
         /* Additional Setup */
         fancyControl.trackColor = UIColor.whiteColor()
         fancyControl.handle.color = UIColor(red: 255/255.0, green: 111/255.0, blue: 0, alpha: 1)

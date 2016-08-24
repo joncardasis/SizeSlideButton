@@ -50,18 +50,18 @@ class SizeSlideHandle: CAShapeLayer {
 }
 
 //MARK: - SizeSlideButton
-enum SizeSlideButtonState {
+public enum SizeSlideButtonState {
     case condensed
     case expanded
 }
 
-extension UIControlEvents{ //Add extra control event
+public extension UIControlEvents{ //Add extra control event
     /* Note that Apple only reserves 4 values: 0x01000000, 0x02000000, 0x04000000 and 0x08000000 for use by UIControlEventApplicationReserved */
-    static let TouchDragFinished = UIControlEvents(rawValue: 0x01000000) //uppercase to match UIControlEvents (sorry Swift3)
+    static public let TouchDragFinished = UIControlEvents(rawValue: 0x01000000) //uppercase to match UIControlEvents (sorry Swift3)
 }
 
-class SizeSlideButton: UIControl {
-    override var frame: CGRect {
+public class SizeSlideButton: UIControl {
+    override public var frame: CGRect {
         didSet{
             if currentState == .condensed {
                 mask.path = condensedLayerMaskPath
@@ -75,27 +75,27 @@ class SizeSlideButton: UIControl {
     let mask = CAShapeLayer()
     var handle = SizeSlideHandle()
     
-    var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
+    public var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
         didSet{
             //Adjust size position for delta value
             handle.frame.size = CGSize(width: handle.frame.width + (oldValue-handlePadding), height: handle.frame.height + (oldValue-handlePadding))
             handle.position = CGPoint(x: handle.position.x + (handlePadding-oldValue)/2, y: frame.height/2)
         }
     }
-    var value: Float = 1.0 //value which displays between 0 and 1.0 for position on control
-    private (set) var currentState: SizeSlideButtonState = .condensed //default state
-    var currentSize: CGFloat { //return the height of the displayed handle indicator
+    public private (set) var value: Float = 1.0 //value which displays between 0 and 1.0 for position on control
+    public private (set) var currentState: SizeSlideButtonState = .condensed //default state
+    public var currentSize: CGFloat { //return the height of the displayed handle indicator
         get { return handle.frame.size.height }
     }
     
-    var trackColor: UIColor = UIColor.whiteColor(){
+    public var trackColor: UIColor = UIColor.whiteColor(){
         didSet{ backgroundColor = trackColor }
     }
     
-    var leftSideRadius: CGFloat{
+    public var leftSideRadius: CGFloat{
         get{ return frame.size.height/8 }
     }
-    var rightSideRadius: CGFloat{
+    public var rightSideRadius: CGFloat{
         get{ return frame.size.height/2 }
     }
     
@@ -130,12 +130,12 @@ class SizeSlideButton: UIControl {
     
     
     //MARK: Implementation
-    override init(frame: CGRect){
+    override public init(frame: CGRect){
         super.init(frame: frame)
         commonInit()
     }
     
-    init(condensedFrame: CGRect){
+    public init(condensedFrame: CGRect){
         let defaultTrackSize = CGSizeMake(condensedFrame.width * 8, condensedFrame.height) //give  a default size if its not specified
         super.init(frame: CGRect(x: condensedFrame.origin.x - defaultTrackSize.width + condensedFrame.width, y: condensedFrame.origin.y, width: defaultTrackSize.width, height: condensedFrame.height))
         commonInit()
@@ -170,7 +170,7 @@ class SizeSlideButton: UIControl {
     }
     
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         commonInit()
     }
@@ -231,7 +231,7 @@ class SizeSlideButton: UIControl {
     }
     
     //Override to allow touches through the frame when the extended state is not active
-    override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+    override public func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
         //Set so only hit-box area is the condensed frame
         let condensedHitBox = CGRect(origin: CGPoint(x: condensedFrame.origin.x - frame.origin.x, y:0), size: condensedFrame.size) //recalculate proper hitbox for condensedframe
         return CGRectContainsPoint(condensedHitBox, point)
