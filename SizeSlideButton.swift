@@ -27,12 +27,12 @@
 import UIKit
 
 //MARK: - SizeSlideButton Subcomponents
-class SizeSlideHandle: CAShapeLayer {
-    var color: UIColor = UIColor(red: 0, green: 122/255, blue: 255/255, alpha: 1){
+public class SizeSlideHandle: CAShapeLayer {
+    public var color: UIColor = UIColor(red: 0, green: 122/255, blue: 255/255, alpha: 1){
         didSet{ self.fillColor = color.CGColor }
     }
     
-    override var frame: CGRect{
+    override public var frame: CGRect{
         didSet{
             self.path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)).CGPath
         }
@@ -44,7 +44,7 @@ class SizeSlideHandle: CAShapeLayer {
         self.fillColor = color.CGColor
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
