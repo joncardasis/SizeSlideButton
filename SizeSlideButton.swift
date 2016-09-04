@@ -73,7 +73,7 @@ public class SizeSlideButton: UIControl {
         }
     }
     let mask = CAShapeLayer()
-    var handle = SizeSlideHandle()
+    public var handle = SizeSlideHandle()
     
     public var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
         didSet{
@@ -82,7 +82,29 @@ public class SizeSlideButton: UIControl {
             handle.position = CGPoint(x: handle.position.x + (handlePadding-oldValue)/2, y: frame.height/2)
         }
     }
-    public private (set) var value: Float = 1.0 //value which displays between 0 and 1.0 for position on control
+    public var value: Float { //value which displays between 0 and 1.0 for position on control
+        get{
+            /* Return a value between 0 and 1.0 */
+            let input = (((handle.frame.height)/2)/leftSideRadius)
+            let result = (1/3)*(input - 1) // 1/3 is m(x)
+            return Float(result)
+        }
+        set{
+            let boundValue = max(0, min(CGFloat(newValue), 1)) //clip value between 0 and 1
+            
+            var multiplier: CGFloat
+            if newValue <= 0.5 {
+                multiplier = map(boundValue, leftMin: 0, leftMax: 0.5, rightMin: (1/4), rightMax: (5/8))
+            }else{
+                multiplier = map(boundValue, leftMin: 0.5, leftMax: 1, rightMin: (5/8), rightMax: 1)
+            }
+            
+            let height = frame.height * multiplier
+            
+            let newSize = CGSize(width: height - handlePadding, height: height - handlePadding)
+            handle.frame = CGRect(x: frame.width - rightSideRadius - newSize.width/2, y: self.frame.height/2 - newSize.height/2, width: newSize.width, height: newSize.height)
+        }
+    }
     public private (set) var currentState: SizeSlideButtonState = .condensed //default state
     public var currentSize: CGFloat { //return the height of the displayed handle indicator
         get { return handle.frame.size.height }
@@ -143,7 +165,7 @@ public class SizeSlideButton: UIControl {
     
     private func commonInit(){
         trackColor = UIColor.whiteColor() //default track color
-        
+
         /* Setup mask layer */
         mask.path = condensedLayerMaskPath
         mask.rasterizationScale = UIScreen.mainScreen().scale
@@ -189,14 +211,7 @@ public class SizeSlideButton: UIControl {
         if gesture.state == .Changed{
             let touchLocation = gesture.locationInView(self)
             self.moveHandle(to: touchLocation)
-            
-            /* Update value for a value between 0 and 1.0 */
-            if handle.frame.midX >= frame.width/2 { //right side adjust
-                value = Float(handle.frame.midX / (frame.width - rightSideRadius))
-            }else{ //left side adjust
-                value = Float((handle.frame.midX - leftSideRadius) / frame.width)
-            }
-            
+
             /* Trigger event actions */
             self.sendActionsForControlEvents(.ValueChanged)
         }
@@ -249,20 +264,23 @@ public class SizeSlideButton: UIControl {
             point.x = self.frame.width-rightSideRadius
         }
         
-        /* Calculate new size based on what the height should be at an X pos on the mask path */
-        let heightRatio = (rightSideRadius - leftSideRadius)/(frame.width - leftSideRadius - rightSideRadius) //height ratio of the upper portion of our trapazoid
+        /* Get a proper multipler for the height */
+        //   We use 1/8 + 4/8 (5/8) as the median multiplier because the caps are different sizes
+        //   We start at 1/4 for the smallest multiper so it is equal to leftsideradius on the left
+        var multiplier: CGFloat = 0
+        if point.x <= frame.width/2 {
+           multiplier = map(point.x, leftMin: leftSideRadius, leftMax: frame.width/2, rightMin: (1/4), rightMax: (5/8))
+        }
+        else if point.x > frame.width/2 {
+            multiplier = map(point.x, leftMin: frame.width/2, leftMax: frame.width-rightSideRadius, rightMin: (5/8), rightMax: 1)
+        }
         
-        let xLoc = point.x + leftSideRadius - (rightSideRadius/2) //recalc point.x to be in trapazoid (exclude the rounded edges)
         
-        //Find the height of the triangle (xLoc * height) and add to height of underlying square lhs radius.
-        //Mult by 2 to find the diameter of the mask at the touch location.
-        let newHandleSize = CGSize(width: (xLoc * heightRatio + leftSideRadius)*2 - handlePadding, height: (xLoc * heightRatio + leftSideRadius)*2 - handlePadding)
-        
+        let newHandleSize = CGSize(width: frame.height * CGFloat(multiplier) - handlePadding, height: frame.height * CGFloat(multiplier) - handlePadding)
         
         /* Apply for new size and location */
         handle.frame = CGRect(x: point.x - newHandleSize.width/2, y: self.frame.height/2 - newHandleSize.height/2, width: newHandleSize.width, height: newHandleSize.height)
     }
-    
     
     func animateTrack(to state: SizeSlideButtonState, velocity: CGFloat, damping: CGFloat , completion: ((done: Bool) -> ())? = nil) {
         guard let layerMask = self.layer.mask else{//protect
@@ -295,5 +313,15 @@ public class SizeSlideButton: UIControl {
         layerMask.addAnimation(revealAnimation, forKey: nil)
         
         CATransaction.commit()
+    }
+    
+    //MARK: Helper Functions
+    private func map(value: CGFloat, leftMin:CGFloat, leftMax:CGFloat, rightMin:CGFloat, rightMax: CGFloat) -> CGFloat{
+        let leftSpan = leftMax - leftMin
+        let rightSpan = rightMax - rightMin
+        
+        let valueScaled = (value - leftMin) / (leftSpan)
+        
+        return (valueScaled * rightSpan) + rightMin
     }
 }
