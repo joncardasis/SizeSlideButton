@@ -85,8 +85,9 @@ public class SizeSlideButton: UIControl {
     public var value: Float { //value which displays between 0 and 1.0 for position on control
         get{
             /* Return a value between 0 and 1.0 */
-            let input = (((handle.frame.height)/2)/leftSideRadius)
+            let input = (((handle.frame.height+handlePadding)/2)/leftSideRadius)
             let result = (1/3)*(input - 1) // 1/3 is m(x)
+            //let result = map((handle.frame.height+handlePadding)/2, leftMin: leftSideRadius, leftMax: rightSideRadius, rightMin: 0, rightMax: frame.width) / frame.width
             return Float(result)
         }
         set{
