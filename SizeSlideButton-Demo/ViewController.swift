@@ -61,7 +61,6 @@ class ViewController: UIViewController {
                     self.debugBtn.alpha = 0
                     }, completion: nil)
         }) 
-        
     }
     
     func test(){

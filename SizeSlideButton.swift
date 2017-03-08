@@ -73,6 +73,11 @@ open class SizeSlideButton: UIControl {
         case linear
     }
     
+    open let shapeMask = CAShapeLayer()
+    open var handle = SizeSlideHandle()
+    open var animationType: AnimationType = .spring
+    open fileprivate(set) var currentState: SizeSlideButtonState = .condensed //default state
+    
     override open var frame: CGRect {
         didSet{
             if currentState == .condensed {
@@ -85,10 +90,6 @@ open class SizeSlideButton: UIControl {
         }
     }
     
-    open let shapeMask = CAShapeLayer()
-    open var handle = SizeSlideHandle()
-    open var animationType: AnimationType = .spring
-    
     open var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
         didSet{
             //Adjust size position for delta value
@@ -96,6 +97,7 @@ open class SizeSlideButton: UIControl {
             handle.position = CGPoint(x: handle.position.x + (handlePadding-oldValue)/2, y: frame.height/2)
         }
     }
+    
     open var value: Float { //value which displays between 0 and 1.0 for position on control
         get{
             /* Return a value between 0 and 1.0 */
@@ -121,8 +123,6 @@ open class SizeSlideButton: UIControl {
             handle.frame = CGRect(x: frame.width - rightSideRadius - newSize.width/2, y: self.frame.height/2 - newSize.height/2, width: newSize.width, height: newSize.height)
         }
     }
-    
-    open fileprivate(set) var currentState: SizeSlideButtonState = .condensed //default state
    
     open var currentSize: CGFloat { //return the height of the displayed handle indicator
         get { return handle.frame.size.height }
