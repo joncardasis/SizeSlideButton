@@ -69,11 +69,16 @@ public extension UIControlEvents{ //Add extra control event
 }
 
 open class SizeSlideButton: UIControl {
+    public enum AnimationType {
+        case spring
+        case linear
+    }
+    
     override open var frame: CGRect {
         didSet{
             if currentState == .condensed {
                 shapeMask.path = condensedLayerMaskPath
-            }else{
+            } else{
                 shapeMask.path = expandedLayerMaskPath
             }
             handle.frame.size = CGSize(width: frame.height, height: frame.height)
@@ -83,6 +88,7 @@ open class SizeSlideButton: UIControl {
     
     open let shapeMask = CAShapeLayer()
     open var handle = SizeSlideHandle()
+    open var animationType: AnimationType = .spring
     
     open var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
         didSet{
@@ -111,8 +117,8 @@ open class SizeSlideButton: UIControl {
             }
             
             let height = frame.height * multiplier
-            
             let newSize = CGSize(width: height - handlePadding, height: height - handlePadding)
+            
             handle.frame = CGRect(x: frame.width - rightSideRadius - newSize.width/2, y: self.frame.height/2 - newSize.height/2, width: newSize.width, height: newSize.height)
         }
     }
@@ -228,16 +234,22 @@ open class SizeSlideButton: UIControl {
         }
         
         if gesture.state == .ended{
+            let damping: CGFloat = 20
+            
             /* Animate handle to right side position */
             let spring = CASpringAnimation(keyPath: "position.x")
             spring.initialVelocity = CGFloat(((1-value) * 2) + 13) //tweaked speed algorithm (faster velocity further to 0)
-            spring.damping = 20
+            spring.damping = damping
             spring.fromValue = handle.position.x
             spring.toValue = frame.width-rightSideRadius
             spring.duration = spring.settlingDuration
             handle.position = CGPoint(x: frame.width-rightSideRadius, y: handle.position.y) //set final state
+            if animationType == .linear {
+                //Simulate a linear movement with a modified mass
+                spring.mass = 0.2
+            }
             handle.add(spring, forKey: nil)
-
+        
             /* Animate mask back and change enum state */
             currentState = .condensed //promise the state will become condensed
             self.animateTrack(to: .condensed, velocity: spring.initialVelocity, damping: spring.damping)
@@ -246,6 +258,9 @@ open class SizeSlideButton: UIControl {
             self.sendActions(for: .touchDragFinished)
         }
     }
+    
+    
+    func springAnimateHandle(to position: CGPoint, with damping: CGFloat = 20) { }
     
     func handleTapGesture(_ gesture: UITapGestureRecognizer){
         if gesture.state == .began{
@@ -265,6 +280,7 @@ open class SizeSlideButton: UIControl {
     
     // Moves the handle's center to the point in the frame
     fileprivate func moveHandle(to touchPoint: CGPoint){
+       
         /* Recalculate for outside points */
         var point = touchPoint
         if point.x < leftSideRadius {
@@ -284,7 +300,6 @@ open class SizeSlideButton: UIControl {
         else if point.x > frame.width/2 {
             multiplier = map(point.x, leftMin: frame.width/2, leftMax: frame.width-rightSideRadius, rightMin: (5/8), rightMax: 1)
         }
-        
         
         let newHandleSize = CGSize(width: frame.height * CGFloat(multiplier) - handlePadding, height: frame.height * CGFloat(multiplier) - handlePadding)
         

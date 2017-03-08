@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         fancyControl.trackColor = UIColor.white
         fancyControl.handle.color = UIColor(red: 255/255.0, green: 111/255.0, blue: 0, alpha: 1)
         //fancyControl.handlePadding = 0.0 //Add no extra padding around the handle
-        
+        //fancyControl.animationType = .linear
         
         fancyControl.addTarget(self, action: #selector(newSizeSelected), for: .touchDragFinished)
         fancyControl.addTarget(self, action: #selector(sizeSliderTapped), for: .touchUpInside)
