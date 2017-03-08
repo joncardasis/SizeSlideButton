@@ -2,7 +2,7 @@
 ![Supported Version](https://img.shields.io/badge/Swift-3-yellow.svg)
 ![Platform](https://img.shields.io/badge/platform-iOS-lightgray.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![CocoaPods](https://img.shields.io/badge/CocoaPods-1.3-green.svg)
+![CocoaPods](https://img.shields.io/badge/CocoaPods-1.4-green.svg)
 
 A fun Swift UIControl for picking a size.
 ![Demo Animation](../assets/demo.gif?raw=true)
