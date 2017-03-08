@@ -27,21 +27,29 @@
 import UIKit
 
 //MARK: - SizeSlideButton Subcomponents
-public class SizeSlideHandle: CAShapeLayer {
-    public var color: UIColor = UIColor(red: 0, green: 122/255, blue: 255/255, alpha: 1){
-        didSet{ self.fillColor = color.CGColor }
+open class SizeSlideHandle: CAShapeLayer {
+    open var color: UIColor = UIColor(red: 0, green: 122/255, blue: 255/255, alpha: 1){
+        didSet{ self.fillColor = color.cgColor }
     }
     
-    override public var frame: CGRect{
+    override open var frame: CGRect {
         didSet{
-            self.path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)).CGPath
+            self.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)).cgPath
         }
+    }
+    
+    open var height: CGFloat {
+        return frame.size.height
+    }
+    
+    open var width: CGFloat {
+        return frame.size.width
     }
     
     override init() {
         super.init()
-        self.path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)).CGPath
-        self.fillColor = color.CGColor
+        self.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: self.frame.height, height: self.frame.height)).cgPath
+        self.fillColor = color.cgColor
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -57,32 +65,33 @@ public enum SizeSlideButtonState {
 
 public extension UIControlEvents{ //Add extra control event
     /* Note that Apple only reserves 4 values: 0x01000000, 0x02000000, 0x04000000 and 0x08000000 for use by UIControlEventApplicationReserved */
-    static public let TouchDragFinished = UIControlEvents(rawValue: 0x01000000) //uppercase to match UIControlEvents (sorry Swift3)
+    static public let touchDragFinished = UIControlEvents(rawValue: 0x01000000)
 }
 
-public class SizeSlideButton: UIControl {
-    override public var frame: CGRect {
+open class SizeSlideButton: UIControl {
+    override open var frame: CGRect {
         didSet{
             if currentState == .condensed {
-                mask.path = condensedLayerMaskPath
+                shapeMask.path = condensedLayerMaskPath
             }else{
-                mask.path = expandedLayerMaskPath
+                shapeMask.path = expandedLayerMaskPath
             }
             handle.frame.size = CGSize(width: frame.height, height: frame.height)
             handle.position = CGPoint(x: frame.width-rightSideRadius, y: frame.height/2)
         }
     }
-    let mask = CAShapeLayer()
-    public var handle = SizeSlideHandle()
     
-    public var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
+    open let shapeMask = CAShapeLayer()
+    open var handle = SizeSlideHandle()
+    
+    open var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
         didSet{
             //Adjust size position for delta value
             handle.frame.size = CGSize(width: handle.frame.width + (oldValue-handlePadding), height: handle.frame.height + (oldValue-handlePadding))
             handle.position = CGPoint(x: handle.position.x + (handlePadding-oldValue)/2, y: frame.height/2)
         }
     }
-    public var value: Float { //value which displays between 0 and 1.0 for position on control
+    open var value: Float { //value which displays between 0 and 1.0 for position on control
         get{
             /* Return a value between 0 and 1.0 */
             let input = (((handle.frame.height+handlePadding)/2)/leftSideRadius)
@@ -91,6 +100,7 @@ public class SizeSlideButton: UIControl {
             return Float(result)
         }
         set{
+            /* Adjust view to fit the new value */
             let boundValue = max(0, min(CGFloat(newValue), 1)) //clip value between 0 and 1
             
             var multiplier: CGFloat
@@ -106,46 +116,46 @@ public class SizeSlideButton: UIControl {
             handle.frame = CGRect(x: frame.width - rightSideRadius - newSize.width/2, y: self.frame.height/2 - newSize.height/2, width: newSize.width, height: newSize.height)
         }
     }
-    public private (set) var currentState: SizeSlideButtonState = .condensed //default state
-    public var currentSize: CGFloat { //return the height of the displayed handle indicator
+    
+    open fileprivate(set) var currentState: SizeSlideButtonState = .condensed //default state
+   
+    open var currentSize: CGFloat { //return the height of the displayed handle indicator
         get { return handle.frame.size.height }
     }
-    
-    public var trackColor: UIColor = UIColor.whiteColor(){
-        didSet{ backgroundColor = trackColor }
-    }
-    
-    public var leftSideRadius: CGFloat{
+    open var leftSideRadius: CGFloat{
         get{ return frame.size.height/8 }
     }
-    public var rightSideRadius: CGFloat{
+    open var rightSideRadius: CGFloat{
         get{ return frame.size.height/2 }
     }
-    
+    open var trackColor: UIColor = UIColor.white{
+        didSet{ backgroundColor = trackColor }
+    }
     
     /* Layer Masks - must share same points for animations */
     var expandedLayerMaskPath: CGPath{
         let path = UIBezierPath()
-        path.addArcWithCenter(CGPoint(x:  leftSideRadius, y: frame.height/2), radius: leftSideRadius, startAngle: CGFloat(M_PI), endAngle: CGFloat(1.5*M_PI), clockwise: true)
-        path.addArcWithCenter(CGPoint(x: frame.width - rightSideRadius, y: rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(1.5*M_PI), endAngle: 0, clockwise: true)
-        path.addArcWithCenter(CGPoint(x: frame.width - rightSideRadius, y: frame.height - rightSideRadius), radius: rightSideRadius, startAngle: 0, endAngle: CGFloat(M_PI_2), clockwise: true)
-        path.addArcWithCenter(CGPoint(x: leftSideRadius, y: frame.height/2), radius: leftSideRadius, startAngle: CGFloat(M_PI_2), endAngle: CGFloat(M_PI), clockwise: true)
-        path.closePath()
-        return path.CGPath
+        path.addArc(withCenter: CGPoint(x:  leftSideRadius, y: frame.height/2), radius: leftSideRadius, startAngle: CGFloat(M_PI), endAngle: CGFloat(1.5*M_PI), clockwise: true)
+        path.addArc(withCenter: CGPoint(x: frame.width - rightSideRadius, y: rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(1.5*M_PI), endAngle: 0, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: frame.width - rightSideRadius, y: frame.height - rightSideRadius), radius: rightSideRadius, startAngle: 0, endAngle: CGFloat(M_PI_2), clockwise: true)
+        path.addArc(withCenter: CGPoint(x: leftSideRadius, y: frame.height/2), radius: leftSideRadius, startAngle: CGFloat(M_PI_2), endAngle: CGFloat(M_PI), clockwise: true)
+        path.close()
+        return path.cgPath
     }
+    
     var condensedLayerMaskPath: CGPath{
         let path = UIBezierPath()
-        path.addArcWithCenter(CGPoint(x:  frame.width - rightSideRadius, y: rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(M_PI), endAngle: CGFloat(1.5*M_PI), clockwise: true)
-        path.addArcWithCenter(CGPoint(x: frame.width - rightSideRadius, y: rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(1.5*M_PI), endAngle: 0, clockwise: true)
-        path.addArcWithCenter(CGPoint(x: frame.width - rightSideRadius, y: frame.height - rightSideRadius), radius: rightSideRadius, startAngle: 0, endAngle: CGFloat(M_PI_2), clockwise: true)
-        path.addArcWithCenter(CGPoint(x: frame.width - rightSideRadius, y: frame.height - rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(M_PI_2), endAngle: CGFloat(M_PI), clockwise: true)
-        path.closePath()
-        return path.CGPath
+        path.addArc(withCenter: CGPoint(x:  frame.width - rightSideRadius, y: rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(M_PI), endAngle: CGFloat(1.5*M_PI), clockwise: true)
+        path.addArc(withCenter: CGPoint(x: frame.width - rightSideRadius, y: rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(1.5*M_PI), endAngle: 0, clockwise: true)
+        path.addArc(withCenter: CGPoint(x: frame.width - rightSideRadius, y: frame.height - rightSideRadius), radius: rightSideRadius, startAngle: 0, endAngle: CGFloat(M_PI_2), clockwise: true)
+        path.addArc(withCenter: CGPoint(x: frame.width - rightSideRadius, y: frame.height - rightSideRadius), radius: rightSideRadius, startAngle: CGFloat(M_PI_2), endAngle: CGFloat(M_PI), clockwise: true)
+        path.close()
+        return path.cgPath
     }
     
     /* Convenience variables */
     var condensedFrame: CGRect{ //Frame representing the condensed view
-        var properBounds = CGPathGetBoundingBox(condensedLayerMaskPath)
+        var properBounds = condensedLayerMaskPath.boundingBox
         properBounds.origin.x += frame.origin.x //remap inner frame coords to world coords
         properBounds.origin.y += frame.origin.y
         return properBounds
@@ -159,19 +169,20 @@ public class SizeSlideButton: UIControl {
     }
     
     public init(condensedFrame: CGRect){
-        let defaultTrackSize = CGSizeMake(condensedFrame.width * 8, condensedFrame.height) //give  a default size if its not specified
-        super.init(frame: CGRect(x: condensedFrame.origin.x - defaultTrackSize.width + condensedFrame.width, y: condensedFrame.origin.y, width: defaultTrackSize.width, height: condensedFrame.height))
+        let dimensionSize = min(condensedFrame.width, condensedFrame.height)
+        let defaultTrackSize = CGSize(width: dimensionSize * 8, height: dimensionSize) //give  a default size if its not specified
+        super.init(frame: CGRect(x: condensedFrame.origin.x - defaultTrackSize.width + dimensionSize, y: condensedFrame.origin.y, width: defaultTrackSize.width, height: dimensionSize))
         commonInit()
     }
     
-    private func commonInit(){
-        trackColor = UIColor.whiteColor() //default track color
+    fileprivate func commonInit(){
+        trackColor = UIColor.white //default track color
 
         /* Setup mask layer */
-        mask.path = condensedLayerMaskPath
-        mask.rasterizationScale = UIScreen.mainScreen().scale
-        mask.shouldRasterize = true
-        self.layer.mask = mask
+        shapeMask.path = condensedLayerMaskPath
+        shapeMask.rasterizationScale = UIScreen.main.scale
+        shapeMask.shouldRasterize = true
+        self.layer.mask = shapeMask
         
         /* Set a default handle padding */
         handlePadding = leftSideRadius
@@ -192,32 +203,31 @@ public class SizeSlideButton: UIControl {
         self.addGestureRecognizer(tapGesture)
     }
     
-    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         commonInit()
     }
     
     //MARK: Gesture/Touch Controls
-    func handleLongPressGesture(gesture: UILongPressGestureRecognizer){
+    func handleLongPressGesture(_ gesture: UILongPressGestureRecognizer){
         
         if currentState == .condensed{
-            self.sendActionsForControlEvents(.TouchDown)
+            self.sendActions(for: .touchDown)
             
             /* Animate mask to full glory and change state when completed */
             currentState = .expanded //promise the state will be expanded
             self.animateTrack(to: .expanded, velocity: 20, damping: 40)
         }
         
-        if gesture.state == .Changed{
-            let touchLocation = gesture.locationInView(self)
+        if gesture.state == .changed{
+            let touchLocation = gesture.location(in: self)
             self.moveHandle(to: touchLocation)
 
             /* Trigger event actions */
-            self.sendActionsForControlEvents(.ValueChanged)
+            self.sendActions(for: .valueChanged)
         }
         
-        if gesture.state == .Ended{
+        if gesture.state == .ended{
             /* Animate handle to right side position */
             let spring = CASpringAnimation(keyPath: "position.x")
             spring.initialVelocity = CGFloat(((1-value) * 2) + 13) //tweaked speed algorithm (faster velocity further to 0)
@@ -226,36 +236,35 @@ public class SizeSlideButton: UIControl {
             spring.toValue = frame.width-rightSideRadius
             spring.duration = spring.settlingDuration
             handle.position = CGPoint(x: frame.width-rightSideRadius, y: handle.position.y) //set final state
-            handle.addAnimation(spring, forKey: nil)
+            handle.add(spring, forKey: nil)
 
             /* Animate mask back and change enum state */
             currentState = .condensed //promise the state will become condensed
             self.animateTrack(to: .condensed, velocity: spring.initialVelocity, damping: spring.damping)
             
             /* Trigger event actions */
-            self.sendActionsForControlEvents(.TouchDragFinished)
+            self.sendActions(for: .touchDragFinished)
         }
     }
     
-    func handleTapGesture(gesture: UITapGestureRecognizer){
-        if gesture.state == .Began{
-            self.sendActionsForControlEvents(.TouchDown)
+    func handleTapGesture(_ gesture: UITapGestureRecognizer){
+        if gesture.state == .began{
+            self.sendActions(for: .touchDown)
         }
-        else if gesture.state == .Ended{
-            self.sendActionsForControlEvents(.TouchUpInside)
+        else if gesture.state == .ended{
+            self.sendActions(for: .touchUpInside)
         }
     }
     
     //Override to allow touches through the frame when the extended state is not active
-    override public func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
+    override open func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         //Set so only hit-box area is the condensed frame
         let condensedHitBox = CGRect(origin: CGPoint(x: condensedFrame.origin.x - frame.origin.x, y:0), size: condensedFrame.size) //recalculate proper hitbox for condensedframe
-        return CGRectContainsPoint(condensedHitBox, point)
+        return condensedHitBox.contains(point)
     }
     
-    
     // Moves the handle's center to the point in the frame
-    private func moveHandle(to touchPoint: CGPoint){
+    fileprivate func moveHandle(to touchPoint: CGPoint){
         /* Recalculate for outside points */
         var point = touchPoint
         if point.x < leftSideRadius {
@@ -283,9 +292,9 @@ public class SizeSlideButton: UIControl {
         handle.frame = CGRect(x: point.x - newHandleSize.width/2, y: self.frame.height/2 - newHandleSize.height/2, width: newHandleSize.width, height: newHandleSize.height)
     }
     
-    func animateTrack(to state: SizeSlideButtonState, velocity: CGFloat, damping: CGFloat , completion: ((done: Bool) -> ())? = nil) {
+    func animateTrack(to state: SizeSlideButtonState, velocity: CGFloat, damping: CGFloat , completion: ((_ done: Bool) -> ())? = nil) {
         guard let layerMask = self.layer.mask else{//protect
-            completion?(done: false)
+            completion?(false)
             return
         }
         
@@ -297,32 +306,31 @@ public class SizeSlideButton: UIControl {
         }
         
         CATransaction.begin()
-        CATransaction.setCompletionBlock({ completion?(done: true) })
+        CATransaction.setCompletionBlock({ completion?(true) })
         
         let revealAnimation = CASpringAnimation(keyPath: "path")
         revealAnimation.initialVelocity = velocity
         revealAnimation.damping = damping
-        revealAnimation.fromValue = mask.path
+        revealAnimation.fromValue = shapeMask.path
         revealAnimation.toValue = newMaskPath
         revealAnimation.duration = revealAnimation.settlingDuration
-        revealAnimation.removedOnCompletion = false
+        revealAnimation.isRemovedOnCompletion = false
         revealAnimation.fillMode = kCAFillModeForwards
         
-        mask.path = newMaskPath //set final state
+        shapeMask.path = newMaskPath //set final state
         
         //CATrasaction will not account for self.mask having an animation added even though self.layer.mask points to this variable. We must animate directly on the layer mask.
-        layerMask.addAnimation(revealAnimation, forKey: nil)
+        layerMask.add(revealAnimation, forKey: nil)
         
         CATransaction.commit()
     }
     
     //MARK: Helper Functions
-    private func map(value: CGFloat, leftMin:CGFloat, leftMax:CGFloat, rightMin:CGFloat, rightMax: CGFloat) -> CGFloat{
+    fileprivate func map(_ value: CGFloat, leftMin:CGFloat, leftMax:CGFloat, rightMin:CGFloat, rightMax: CGFloat) -> CGFloat{
         let leftSpan = leftMax - leftMin
         let rightSpan = rightMax - rightMin
-        
         let valueScaled = (value - leftMin) / (leftSpan)
-        
+
         return (valueScaled * rightSpan) + rightMin
     }
 }
