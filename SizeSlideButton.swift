@@ -1,6 +1,5 @@
 //
 //  SizeSlideButton.swift
-//  ColorSizeSlider
 //
 //  Created by Jonathan Cardasis on 6/30/16.
 //  Copyright © 2016 Jonathan Cardasis. All rights reserved.

@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:ColorSizeSlider.xcodeproj">
+      location = "self:/Users/jcardasi/Desktop/SizeSlideButton/SizeSlideButton-Demo.xcodeproj">
    </FileRef>
 </Workspace>

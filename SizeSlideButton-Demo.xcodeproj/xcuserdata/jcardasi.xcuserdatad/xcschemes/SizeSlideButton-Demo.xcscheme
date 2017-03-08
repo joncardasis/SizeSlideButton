@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "35B116DF1D25C44000B0C925"
-               BuildableName = "ColorSizeSlider.app"
-               BlueprintName = "ColorSizeSlider"
-               ReferencedContainer = "container:ColorSizeSlider.xcodeproj">
+               BuildableName = "SizeSlideButton-Demo.app"
+               BlueprintName = "SizeSlideButton-Demo"
+               ReferencedContainer = "container:SizeSlideButton-Demo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,34 +28,14 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35B116F31D25C44000B0C925"
-               BuildableName = "ColorSizeSliderTests.xctest"
-               BlueprintName = "ColorSizeSliderTests"
-               ReferencedContainer = "container:ColorSizeSlider.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35B116FE1D25C44000B0C925"
-               BuildableName = "ColorSizeSliderUITests.xctest"
-               BlueprintName = "ColorSizeSliderUITests"
-               ReferencedContainer = "container:ColorSizeSlider.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "35B116DF1D25C44000B0C925"
-            BuildableName = "ColorSizeSlider.app"
-            BlueprintName = "ColorSizeSlider"
-            ReferencedContainer = "container:ColorSizeSlider.xcodeproj">
+            BuildableName = "SizeSlideButton-Demo.app"
+            BlueprintName = "SizeSlideButton-Demo"
+            ReferencedContainer = "container:SizeSlideButton-Demo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "35B116DF1D25C44000B0C925"
-            BuildableName = "ColorSizeSlider.app"
-            BlueprintName = "ColorSizeSlider"
-            ReferencedContainer = "container:ColorSizeSlider.xcodeproj">
+            BuildableName = "SizeSlideButton-Demo.app"
+            BlueprintName = "SizeSlideButton-Demo"
+            ReferencedContainer = "container:SizeSlideButton-Demo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -95,9 +75,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "35B116DF1D25C44000B0C925"
-            BuildableName = "ColorSizeSlider.app"
-            BlueprintName = "ColorSizeSlider"
-            ReferencedContainer = "container:ColorSizeSlider.xcodeproj">
+            BuildableName = "SizeSlideButton-Demo.app"
+            BlueprintName = "SizeSlideButton-Demo"
+            ReferencedContainer = "container:SizeSlideButton-Demo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
