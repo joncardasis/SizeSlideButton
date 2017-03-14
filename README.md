@@ -44,6 +44,11 @@ Output:
 
 <img src="../assets/darkScreenshot.png?raw=true" width="350">
 
+### Via Interface Builder
+SizeSlideButton can also be created right from the Interface Builder and allows basic properties to be edited. 
+<img src="../assets/StoryboardScreenshot.png?raw=true" width="450">
+
+
 ## Documentation
 + `init(condensedFrame: CGRect)` will set the frame of where the condensed frame should lie (width and height should be equal)
 + `init(frame: CGRect)` will set the frame of where the frame should lie when fully expanded
