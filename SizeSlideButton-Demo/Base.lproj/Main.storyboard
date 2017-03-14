@@ -20,14 +20,39 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Xb-YY-IOj" customClass="SizeSlideButton" customModule="SizeSlideButton_Demo" customModuleProvider="target">
+                                <rect key="frame" x="107" y="322" width="161" height="23"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="23" id="jLr-We-SRg"/>
+                                    <constraint firstAttribute="width" constant="161" id="lqr-H0-Tmc"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="handlePadding">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="handleColor">
+                                        <color key="value" red="0.0" green="0.73725491762161255" blue="0.83137255907058716" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="trackColor">
+                                        <color key="value" red="0.14901961386203766" green="0.19607843458652496" blue="0.21960784494876862" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" red="0.37647059559822083" green="0.49019607901573181" blue="0.54509806632995605" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="1Xb-YY-IOj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ehc-oF-pva"/>
+                            <constraint firstItem="1Xb-YY-IOj" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="sub-CU-E5a"/>
+                        </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="291" y="292"/>
+            <point key="canvasLocation" x="290.39999999999998" y="291.90404797601201"/>
         </scene>
     </scenes>
 </document>

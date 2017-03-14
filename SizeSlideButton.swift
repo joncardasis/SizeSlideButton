@@ -52,7 +52,7 @@ open class SizeSlideHandle: CAShapeLayer {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("SizeSlideHandle should not be implemnted alone.")
     }
 }
 
@@ -67,7 +67,7 @@ public extension UIControlEvents{ //Add extra control event
     static public let touchDragFinished = UIControlEvents(rawValue: 0x01000000)
 }
 
-open class SizeSlideButton: UIControl {
+@IBDesignable open class SizeSlideButton: UIControl {
     public enum AnimationType {
         case spring
         case linear
@@ -90,12 +90,16 @@ open class SizeSlideButton: UIControl {
         }
     }
     
-    open var handlePadding: CGFloat = 0.0{ //padding on sides of the handle
+    @IBInspectable open var handlePadding: CGFloat = 0.0 { //padding on sides of the handle
         didSet{
             //Adjust size position for delta value
             handle.frame.size = CGSize(width: handle.frame.width + (oldValue-handlePadding), height: handle.frame.height + (oldValue-handlePadding))
             handle.position = CGPoint(x: handle.position.x + (handlePadding-oldValue)/2, y: frame.height/2)
         }
+    }
+    @IBInspectable open var handleColor: UIColor {
+        get { return handle.color }
+        set { handle.color = newValue }
     }
     
     open var value: Float { //value which displays between 0 and 1.0 for position on control
@@ -123,18 +127,18 @@ open class SizeSlideButton: UIControl {
             handle.frame = CGRect(x: frame.width - rightSideRadius - newSize.width/2, y: self.frame.height/2 - newSize.height/2, width: newSize.width, height: newSize.height)
         }
     }
-   
+    
+    @IBInspectable open var trackColor: UIColor = UIColor.white {
+        didSet{ backgroundColor = trackColor }
+    }
     open var currentSize: CGFloat { //return the height of the displayed handle indicator
         get { return handle.frame.size.height }
     }
-    open var leftSideRadius: CGFloat{
+    open var leftSideRadius: CGFloat {
         get{ return frame.size.height/8 }
     }
-    open var rightSideRadius: CGFloat{
+    open var rightSideRadius: CGFloat {
         get{ return frame.size.height/2 }
-    }
-    open var trackColor: UIColor = UIColor.white{
-        didSet{ backgroundColor = trackColor }
     }
     
     /* Layer Masks - must share same points for animations */

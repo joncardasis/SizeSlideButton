@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "SizeSlideButton"
-  s.version      = "1.4"
+  s.version      = "1.5"
   s.summary      = "A Swift UI Component for picking a size."
 
   s.description  = <<-DESC
@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author    = "Jonathan Cardasis"
   s.platform     = :ios, "9.0"
-  s.source       = { :git => "https://github.com/joncardasis/SizeSlideButton.git", :tag => "1.4" }
+  s.source       = { :git => "https://github.com/joncardasis/SizeSlideButton.git", :tag => "1.5" }
   s.source_files  = "SizeSlideButton.swift"
 end
